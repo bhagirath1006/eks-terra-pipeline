@@ -11,7 +11,7 @@ permissions:
   contents: read
 
 env:
-  AWS_REGION: ${{ vars.AWS_REGION }}
+  AWS_REGION: us-east-1
   CLUSTER_NAME: simple-eks
 
 jobs:
@@ -27,7 +27,7 @@ jobs:
         uses: aws-actions/configure-aws-credentials@v4
         with:
           role-to-assume: arn:aws:iam::360477615168:role/github-oidc-deployer
-          aws-region: ${{ env.AWS_REGION }}
+          aws-region: us-east-1
 
       - name: Update kubeconfig
         run: |
