@@ -1,48 +1,18 @@
-apiVersion: apps/v1
-kind: Deployment
+apiVersion: v1
+kind: ReplicationController
 metadata:
-  name: deploy-app
-  namespace: default
-  labels:
-    app: deploy-app
+  name: nginx-rc
 spec:
-  replicas: 2
-  strategy:
-    type: RollingUpdate
-    rollingUpdate:
-      maxSurge: 1
-      maxUnavailable: 0
+  replicas: 3
   selector:
-    matchLabels:
-      app: deploy-app
+    app: nginx
   template:
     metadata:
       labels:
-        app: deploy-app
+        app: nginx
     spec:
       containers:
-      - name: deploy-app
-        image: nginx:stable
-        imagePullPolicy: IfNotPresent
-        ports:
-        - containerPort: 80
-          name: http
-        resources:
-          requests:
-            cpu: 100m
-            memory: 128Mi
-          limits:
-            cpu: 500m
-            memory: 512Mi
-        livenessProbe:
-          httpGet:
-            path: /
-            port: 80
-          initialDelaySeconds: 10
-          periodSeconds: 10
-        readinessProbe:
-          httpGet:
-            path: /
-            port: 80
-          initialDelaySeconds: 5
-          periodSeconds: 5
+        - name: nginx
+          image: nginx:latest
+          ports:
+            - containerPort: 80
