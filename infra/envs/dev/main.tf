@@ -7,9 +7,9 @@ terraform {
   }
 }
 
-# Configure the AWS Provider
+# Configure the AWS Provider using the region variable
 provider "aws" {
-  region = "us-east-1"
+  region = var.region
 }
 
 # Create S3 backend resources (state bucket and locking table)
@@ -17,6 +17,7 @@ module "s3_backend" {
   source = "../../modules/s3"
   state_bucket_name      = "bhagirath-eks-terraform-state"
   state_lock_table_name  = "terraform-state-lock"
+  region                 = var.region
 }
 
 module "vpc" {

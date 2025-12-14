@@ -8,3 +8,6 @@ terraform {
   #   encrypt        = true
   # }
 }
+
+# Note: The backend region MUST match var.region in main.tf
+# Default region is us-east-1 for all resources (EKS, S3, DynamoDB)
