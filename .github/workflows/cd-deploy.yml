@@ -1,0 +1,55 @@
+name: CD Deploy (Apply Manifests to EKS)
+
+on:
+  push:
+    branches: [ main ]
+    paths:
+      - 'apps/k8s/**'
+
+permissions:
+  id-token: write
+  contents: read
+
+env:
+  AWS_REGION: ${{ vars.AWS_REGION }}
+  CLUSTER_NAME: simple-eks
+
+jobs:
+  deploy:
+    name: Deploy to EKS Cluster
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Configure AWS Credentials via OIDC
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: arn:aws:iam::123456789012:role/github-oidc-deployer
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Update kubeconfig
+        run: |
+          aws eks update-kubeconfig \
+            --region ${{ env.AWS_REGION }} \
+            --name ${{ env.CLUSTER_NAME }}
+
+      - name: Validate Kubernetes Manifests
+        run: |
+          for file in apps/k8s/*.yaml; do
+            echo "Validating $file"
+            kubectl apply -f "$file" --dry-run=client --validate=true
+          done
+
+      - name: Apply Manifests to EKS
+        run: |
+          echo "Deploying to EKS cluster: ${{ env.CLUSTER_NAME }}"
+          kubectl apply -f apps/k8s/
+          
+      - name: Verify Deployment
+        run: |
+          echo "Checking deployment status..."
+          kubectl get deployments
+          kubectl get services
+          kubectl get pods

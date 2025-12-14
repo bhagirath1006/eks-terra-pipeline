@@ -1,0 +1,15 @@
+Setup Steps (Minimal Working Project)
+1. Create an S3 bucket for Terraform state and a DynamoDB table for locking.
+2. Edit infra/envs/dev/backend.tf variables or set environment TF variables:
+   - state_bucket (S3 bucket name)
+   - region (default is us-east-1)
+3. Create an IAM OIDC provider in AWS for token.actions.githubusercontent.com.
+4. Create two IAM roles for GitHub Actions:
+   - github-oidc-terraform (role assumed for Terraform CI)
+   - github-oidc-deployer (role assumed for CD deploy)
+   Both roles should allow sts:AssumeRoleWithWebIdentity with conditions restricting to your repo.
+5. Update the role ARNs in .github/workflows/*.yml files.
+6. Push this repo to GitHub.
+7. Create the S3 bucket (if not already) and ensure backend.tf references it (via var.state_bucket).
+8. On push to main, CI workflow will run and create the EKS cluster.
+9. After cluster ready, pushing to apps/** will trigger CD to apply manifests.
