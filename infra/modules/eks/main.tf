@@ -123,13 +123,11 @@ resource "aws_eks_node_group" "default" {
 }
 
 #OIDC provider for EKS
-resource "aws_eks_identity_provider_config" "eks_oidc" {
-  cluster_name = aws_eks_cluster.bhagi-eks.cluster_name
-  type         = "oidc"
+resource "aws_eks_cluster" "bhagi_eks" {
+  name     = var.cluster_name
+  role_arn = aws_iam_role.eks_cluster_role.arn
 
-  oidc {
-    client_id                     = "sts.amazonaws.com"
-    identity_provider_config_name = "example"
-    issuer_url                    = "https://token.actions.githubusercontent.com"
+  vpc_config {
+    subnet_ids = var.subnet_ids
   }
 }
