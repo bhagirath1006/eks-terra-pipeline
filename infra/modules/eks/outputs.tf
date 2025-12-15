@@ -13,6 +13,12 @@ output "cluster_endpoint" {
   description = "EKS cluster endpoint"
 }
 
+output "cluster_ca_certificate" {
+  value       = aws_eks_cluster.main.certificate_authority[0].data
+  description = "EKS cluster CA certificate"
+  sensitive   = true
+}
+
 output "cluster_version" {
   value       = aws_eks_cluster.main.version
   description = "EKS cluster version"
