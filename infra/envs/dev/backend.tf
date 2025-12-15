@@ -1,5 +1,5 @@
 terraform {
-  # Temporarily commented out - will be enabled after S3 bucket creation
+  # Configure the S3 backend for Terraform state
   # backend "s3" {
   #   bucket         = "bhagirath-eks-terraform-state"
   #   key            = "eks/terraform.tfstate"
@@ -8,6 +8,3 @@ terraform {
   #   encrypt        = true
   # }
 }
-
-# Note: The backend region MUST match var.region in main.tf
-# Default region is us-east-1 for all resources (EKS, S3, DynamoDB)

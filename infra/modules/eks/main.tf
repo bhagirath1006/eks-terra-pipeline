@@ -104,12 +104,12 @@ resource "aws_eks_node_group" "default" {
   version         = var.cluster_version
 
   scaling_config {
-    desired_size = 1
-    max_size     = 2
-    min_size     = 1
+    desired_size = 3
+    max_size     = 4
+    min_size     = 3
   }
 
-  instance_types = ["t3.medium"]
+  instance_types = ["t2.micro"]
 
   tags = {
     Name = "${var.cluster_name}-node-group"
@@ -120,4 +120,16 @@ resource "aws_eks_node_group" "default" {
     aws_iam_role_policy_attachment.eks_cni_policy,
     aws_iam_role_policy_attachment.eks_registry_policy,
   ]
+}
+
+#OIDC provider for EKS
+resource "aws_eks_identity_provider_config" "eks_oidc" {
+  cluster_name = aws_eks_cluster.bhagi-eks.cluster_name
+  type         = "oidc"
+
+  oidc {
+    client_id                     = "sts.amazonaws.com"
+    identity_provider_config_name = "example"
+    issuer_url                    = "https://token.actions.githubusercontent.com"
+  }
 }

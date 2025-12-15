@@ -12,7 +12,7 @@ provider "aws" {
   region = var.region
 }
 
-# Create S3 backend resources (state bucket and locking table)
+# Create S3 backend resources
 module "s3_backend" {
   source = "../../modules/s3"
   state_bucket_name      = "bhagirath-eks-terraform-state"
