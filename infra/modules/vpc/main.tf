@@ -1,6 +1,4 @@
 // VPC module wrapper (uses terraform-aws-modules/vpc/aws)
-variable "region" {}
-variable "name" { default = "simple-vpc" }
 
 module "vpc" {
   source  = "terraform-aws-modules/vpc/aws"
@@ -16,16 +14,4 @@ module "vpc" {
 
   enable_nat_gateway = true
   single_nat_gateway = true
-}
-
-output "vpc_id" {
-  value = module.vpc.vpc_id
-}
-
-output "private_subnets" {
-  value = module.vpc.private_subnets
-}
-
-output "public_subnets" {
-  value = module.vpc.public_subnets
 }

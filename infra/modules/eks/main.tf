@@ -1,25 +1,3 @@
-// EKS module wrapper - using AWS provider directly
-variable "cluster_name" {
-  description = "EKS cluster name"
-  type        = string
-}
-
-variable "vpc_id" {
-  description = "VPC ID"
-  type        = string
-}
-
-variable "subnet_ids" {
-  description = "List of subnet IDs"
-  type        = list(string)
-}
-
-variable "cluster_version" {
-  description = "Kubernetes version"
-  type        = string
-  default     = "1.29"
-}
-
 # IAM role for EKS cluster
 resource "aws_iam_role" "eks_cluster_role" {
   name = "${var.cluster_name}-cluster-role"
@@ -58,8 +36,6 @@ resource "aws_eks_cluster" "main" {
   tags = {
     Name = var.cluster_name
   }
-
-  depends_on = [aws_iam_role_policy_attachment.eks_cluster_policy]
 }
 
 # IAM role for EKS node groups
@@ -109,25 +85,9 @@ resource "aws_eks_node_group" "default" {
     min_size     = 3
   }
 
-  instance_types = ["t2.micro"]
+  instance_types = ["t3.medium"]
 
   tags = {
     Name = "${var.cluster_name}-node-group"
-  }
-
-  depends_on = [
-    aws_iam_role_policy_attachment.eks_worker_node_policy,
-    aws_iam_role_policy_attachment.eks_cni_policy,
-    aws_iam_role_policy_attachment.eks_registry_policy,
-  ]
-}
-
-#OIDC provider for EKS
-resource "aws_eks_cluster" "bhagi_eks" {
-  name     = var.cluster_name
-  role_arn = aws_iam_role.eks_cluster_role.arn
-
-  vpc_config {
-    subnet_ids = var.subnet_ids
   }
 }
