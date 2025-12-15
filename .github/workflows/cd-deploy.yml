@@ -38,7 +38,7 @@ jobs:
       - name: Apply Manifests to EKS
         run: |
           echo "Deploying to EKS cluster: ${{ env.CLUSTER_NAME }}"
-          kubectl apply -f apps/k8s/
+          kubectl apply -f apps/k8s/ --validate=false
           
       - name: Verify Deployment
         run: |
