@@ -1,4 +1,4 @@
-name: CD Deploy (Apply Manifests to EKS)
+name: CD Deploy 
 
 on:
   push:
@@ -12,7 +12,7 @@ permissions:
 
 env:
   AWS_REGION: us-east-1
-  CLUSTER_NAME: bhagi-eks
+  CLUSTER_NAME: simple-eks
 
 jobs:
   deploy:
