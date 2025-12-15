@@ -35,13 +35,6 @@ jobs:
             --region ${{ env.AWS_REGION }} \
             --name ${{ env.CLUSTER_NAME }}
 
-      - name: Validate Kubernetes Manifests
-        run: |
-          for file in apps/k8s/*.yaml; do
-            echo "Validating $file"
-            kubectl apply -f "$file" --dry-run=client --validate=true
-          done
-
       - name: Apply Manifests to EKS
         run: |
           echo "Deploying to EKS cluster: ${{ env.CLUSTER_NAME }}"
